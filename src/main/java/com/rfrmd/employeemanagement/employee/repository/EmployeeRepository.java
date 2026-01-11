@@ -9,6 +9,4 @@ import java.util.UUID;
 
 public interface EmployeeRepository extends JpaRepository<Employee, UUID>, JpaSpecificationExecutor<Employee> {
     boolean existsByEmail(String email);
-
-    Page<Employee> findByIsDeletedFalse(Pageable pageable);
 }

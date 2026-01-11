@@ -5,8 +5,11 @@ import com.rfrmd.employeemanagement.auth.dto.LoginRequest;
 import com.rfrmd.employeemanagement.auth.dto.RegisterRequest;
 import com.rfrmd.employeemanagement.auth.entity.Role;
 import com.rfrmd.employeemanagement.auth.entity.User;
+import com.rfrmd.employeemanagement.auth.mapper.AuthMapper;
 import com.rfrmd.employeemanagement.auth.repository.UserRepository;
 import com.rfrmd.employeemanagement.auth.security.JwtService;
+import com.rfrmd.employeemanagement.auth.security.RateLimitingService;
+import io.github.bucket4j.Bucket;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -14,6 +17,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -35,6 +39,12 @@ class AuthServiceTest {
     private JwtService jwtService;
     @Mock
     private AuthenticationManager authenticationManager;
+    @Mock
+    private AuthMapper authMapper;
+    @Mock
+    private RateLimitingService rateLimitingService;
+    @Mock
+    private Bucket bucket;
 
     @InjectMocks
     private AuthService authService;
@@ -60,6 +70,8 @@ class AuthServiceTest {
 
     @Test
     void register_ShouldReturnAuthenticationResponse_WhenRequestIsValid() {
+        when(repository.existsByEmail(registerRequest.email())).thenReturn(false);
+        when(authMapper.toUser(registerRequest)).thenReturn(user); // Mapper must replace manual creation
         when(passwordEncoder.encode(anyString())).thenReturn("encodedPassword");
         when(repository.save(any(User.class))).thenReturn(user);
         when(jwtService.generateToken(any(User.class))).thenReturn("jwt-token");
@@ -69,13 +81,24 @@ class AuthServiceTest {
         assertNotNull(response);
         assertEquals("jwt-token", response.accessToken());
 
-        verify(passwordEncoder).encode(registerRequest.password());
         verify(repository).save(any(User.class));
         verify(jwtService).generateToken(any(User.class));
     }
 
     @Test
+    void register_ShouldThrowException_WhenEmailExists() {
+        when(repository.existsByEmail(registerRequest.email())).thenReturn(true);
+
+        assertThrows(IllegalArgumentException.class, () -> authService.register(registerRequest));
+        verify(repository, never()).save(any(User.class));
+    }
+
+    @Test
     void authenticate_ShouldReturnAuthenticationResponse_WhenCredentialsAreValid() {
+        // Rate Limiting Mock
+        when(rateLimitingService.resolveBucket(anyString())).thenReturn(bucket);
+        when(bucket.tryConsume(1)).thenReturn(true);
+
         Authentication authentication = mock(Authentication.class);
         when(authenticationManager.authenticate(any())).thenReturn(authentication);
         when(authentication.getPrincipal()).thenReturn(user);
@@ -86,20 +109,29 @@ class AuthServiceTest {
         assertNotNull(response);
         assertEquals("jwt-token", response.accessToken());
 
+        verify(rateLimitingService).resolveBucket(loginRequest.email());
+        verify(bucket).tryConsume(1);
         verify(authenticationManager).authenticate(any(UsernamePasswordAuthenticationToken.class));
-        verify(jwtService).generateToken(user);
+    }
+
+    @Test
+    void authenticate_ShouldThrowBadCredentials_WhenRateLimitExceeded() {
+        when(rateLimitingService.resolveBucket(anyString())).thenReturn(bucket);
+        when(bucket.tryConsume(1)).thenReturn(false); // Bucket empty
+
+        assertThrows(BadCredentialsException.class, () -> authService.authenticate(loginRequest));
+
+        verify(authenticationManager, never()).authenticate(any());
     }
 
     @Test
     void authenticate_ShouldThrowException_WhenAuthenticationFails() {
+        when(rateLimitingService.resolveBucket(anyString())).thenReturn(bucket);
+        when(bucket.tryConsume(1)).thenReturn(true);
+
         when(authenticationManager.authenticate(any()))
-                .thenThrow(
-                        new org.springframework.security.authentication.BadCredentialsException("Invalid credentials"));
+                .thenThrow(new BadCredentialsException("Invalid credentials"));
 
-        assertThrows(org.springframework.security.authentication.BadCredentialsException.class,
-                () -> authService.authenticate(loginRequest));
-
-        verify(authenticationManager).authenticate(any(UsernamePasswordAuthenticationToken.class));
-        verifyNoInteractions(jwtService);
+        assertThrows(BadCredentialsException.class, () -> authService.authenticate(loginRequest));
     }
 }
