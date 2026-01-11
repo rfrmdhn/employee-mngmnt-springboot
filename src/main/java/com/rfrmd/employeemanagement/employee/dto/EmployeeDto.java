@@ -1,4 +1,4 @@
-package com.rfrmd.employeemanagement.dto;
+package com.rfrmd.employeemanagement.employee.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Min;

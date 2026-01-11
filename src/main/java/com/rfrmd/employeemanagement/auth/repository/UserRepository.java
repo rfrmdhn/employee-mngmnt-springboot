@@ -1,6 +1,6 @@
-package com.rfrmd.employeemanagement.repository;
+package com.rfrmd.employeemanagement.auth.repository;
 
-import com.rfrmd.employeemanagement.model.User;
+import com.rfrmd.employeemanagement.auth.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 

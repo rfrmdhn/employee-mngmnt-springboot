@@ -1,4 +1,4 @@
-package com.rfrmd.employeemanagement.dto;
+package com.rfrmd.employeemanagement.auth.dto;
 
 public record LoginRequest(String email, String password) {
 }

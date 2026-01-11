@@ -1,4 +1,4 @@
-package com.rfrmd.employeemanagement.security;
+package com.rfrmd.employeemanagement.auth.security;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

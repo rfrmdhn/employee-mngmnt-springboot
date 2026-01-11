@@ -1,9 +1,9 @@
-package com.rfrmd.employeemanagement.controller;
+package com.rfrmd.employeemanagement.auth.controller;
 
-import com.rfrmd.employeemanagement.dto.AuthenticationResponse;
-import com.rfrmd.employeemanagement.dto.LoginRequest;
-import com.rfrmd.employeemanagement.dto.RegisterRequest;
-import com.rfrmd.employeemanagement.service.AuthService;
+import com.rfrmd.employeemanagement.auth.dto.AuthenticationResponse;
+import com.rfrmd.employeemanagement.auth.dto.LoginRequest;
+import com.rfrmd.employeemanagement.auth.dto.RegisterRequest;
+import com.rfrmd.employeemanagement.auth.service.AuthService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,25 +21,17 @@ public class AuthController {
         this.service = service;
     }
 
-    @io.swagger.v3.oas.annotations.Operation(
-            summary = "Register a new user",
-            description = "Creates a new user account with the specified role."
-    )
+    @io.swagger.v3.oas.annotations.Operation(summary = "Register a new user", description = "Creates a new user account with the specified role.")
     @PostMapping("/register")
     public ResponseEntity<AuthenticationResponse> register(
-            @RequestBody RegisterRequest request
-    ) {
+            @RequestBody RegisterRequest request) {
         return ResponseEntity.ok(service.register(request));
     }
 
-    @io.swagger.v3.oas.annotations.Operation(
-            summary = "Authenticate user",
-            description = "Authenticates a user and returns a JWT token."
-    )
+    @io.swagger.v3.oas.annotations.Operation(summary = "Authenticate user", description = "Authenticates a user and returns a JWT token.")
     @PostMapping("/login")
     public ResponseEntity<AuthenticationResponse> authenticate(
-            @RequestBody LoginRequest request
-    ) {
+            @RequestBody LoginRequest request) {
         return ResponseEntity.ok(service.authenticate(request));
     }
 }

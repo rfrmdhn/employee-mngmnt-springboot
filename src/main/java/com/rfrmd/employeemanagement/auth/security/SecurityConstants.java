@@ -1,4 +1,4 @@
-package com.rfrmd.employeemanagement.security;
+package com.rfrmd.employeemanagement.auth.security;
 
 public class SecurityConstants {
     // Endpoints

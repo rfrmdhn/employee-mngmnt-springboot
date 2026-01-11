@@ -1,6 +1,5 @@
-package com.rfrmd.employeemanagement.model;
+package com.rfrmd.employeemanagement.auth.entity;
 
-import com.rfrmd.employeemanagement.model.Role;
 import jakarta.persistence.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;

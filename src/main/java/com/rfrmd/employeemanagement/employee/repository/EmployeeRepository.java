@@ -1,6 +1,6 @@
-package com.rfrmd.employeemanagement.repository;
+package com.rfrmd.employeemanagement.employee.repository;
 
-import com.rfrmd.employeemanagement.model.Employee;
+import com.rfrmd.employeemanagement.employee.entity.Employee;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

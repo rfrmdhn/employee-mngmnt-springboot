@@ -1,4 +1,4 @@
-package com.rfrmd.employeemanagement.model;
+package com.rfrmd.employeemanagement.employee.entity;
 
 import jakarta.persistence.*;
 import org.springframework.data.annotation.CreatedDate;

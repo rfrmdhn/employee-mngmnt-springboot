@@ -1,4 +1,4 @@
-package com.rfrmd.employeemanagement.dto;
+package com.rfrmd.employeemanagement.auth.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

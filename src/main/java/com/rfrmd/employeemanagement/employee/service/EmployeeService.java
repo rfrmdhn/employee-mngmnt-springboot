@@ -1,8 +1,8 @@
-package com.rfrmd.employeemanagement.service;
+package com.rfrmd.employeemanagement.employee.service;
 
-import com.rfrmd.employeemanagement.dto.EmployeeDto;
-import com.rfrmd.employeemanagement.model.Employee;
-import com.rfrmd.employeemanagement.repository.EmployeeRepository;
+import com.rfrmd.employeemanagement.employee.dto.EmployeeDto;
+import com.rfrmd.employeemanagement.employee.entity.Employee;
+import com.rfrmd.employeemanagement.employee.repository.EmployeeRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.criteria.Predicate;
 import org.springframework.data.domain.Page;
