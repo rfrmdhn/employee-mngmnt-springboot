@@ -1,0 +1,58 @@
+package com.rfrmd.employeemanagement.controller;
+
+import com.rfrmd.employeemanagement.dto.EmployeeDto;
+import com.rfrmd.employeemanagement.service.EmployeeService;
+import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/api/employees")
+@io.swagger.v3.oas.annotations.tags.Tag(name = "Employee Management", description = "Endpoints for managing employees")
+public class EmployeeController {
+
+    private final EmployeeService service;
+
+    public EmployeeController(EmployeeService service) {
+        this.service = service;
+    }
+
+    @io.swagger.v3.oas.annotations.Operation(summary = "Get all employees", description = "Retrieves a paginated list of employees.")
+    @GetMapping
+    public ResponseEntity<Page<EmployeeDto>> getAllEmployees(
+            @PageableDefault(size = 10, sort = "createdAt") Pageable pageable
+    ) {
+        return ResponseEntity.ok(service.getAllEmployees(pageable));
+    }
+
+    @io.swagger.v3.oas.annotations.Operation(summary = "Get employee by ID", description = "Retrieves a specific employee by their unique ID.")
+    @GetMapping("/{id}")
+    public ResponseEntity<EmployeeDto> getEmployeeById(@PathVariable Long id) {
+        return ResponseEntity.ok(service.getEmployeeById(id));
+    }
+
+    @io.swagger.v3.oas.annotations.Operation(summary = "Create employee", description = "Creates a new employee record. Requires ADMIN role.")
+    @PostMapping
+    public ResponseEntity<EmployeeDto> createEmployee(@Valid @RequestBody EmployeeDto dto) {
+        return ResponseEntity.ok(service.createEmployee(dto));
+    }
+
+    @io.swagger.v3.oas.annotations.Operation(summary = "Update employee", description = "Updates an existing employee record. Requires ADMIN role.")
+    @PutMapping("/{id}")
+    public ResponseEntity<EmployeeDto> updateEmployee(
+            @PathVariable Long id,
+            @Valid @RequestBody EmployeeDto dto
+    ) {
+        return ResponseEntity.ok(service.updateEmployee(id, dto));
+    }
+
+    @io.swagger.v3.oas.annotations.Operation(summary = "Delete employee", description = "Deletes an employee record. Requires ADMIN role.")
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteEmployee(@PathVariable Long id) {
+        service.deleteEmployee(id);
+        return ResponseEntity.noContent().build();
+    }
+}
