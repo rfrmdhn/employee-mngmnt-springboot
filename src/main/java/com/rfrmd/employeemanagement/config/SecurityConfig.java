@@ -13,8 +13,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import com.rfrmd.employeemanagement.security.SecurityConstants;
 
-import static com.example.demo.model.Role.ADMIN;
-import static com.example.demo.model.Role.USER;
+import static com.rfrmd.employeemanagement.model.Role.ADMIN;
+import static com.rfrmd.employeemanagement.model.Role.USER;
 import static org.springframework.http.HttpMethod.*;
 
 @Configuration
