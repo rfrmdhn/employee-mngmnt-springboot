@@ -49,7 +49,7 @@ class EmployeeServiceTest {
                 .department("IT")
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
-                .isDeleted(false)
+                .deleted(false)
                 .build();
 
         employeeDto = EmployeeDto.builder()
@@ -153,7 +153,7 @@ class EmployeeServiceTest {
         Employee existingEmployee = Employee.builder()
                 .id(employeeId)
                 .email("original@example.com")
-                .isDeleted(false)
+                .deleted(false)
                 .build();
         EmployeeDto newDto = EmployeeDto.builder()
                 .email("taken@example.com")

@@ -5,11 +5,14 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import org.hibernate.annotations.SQLRestriction;
+
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "employees")
 @EntityListeners(AuditingEntityListener.class)
+@SQLRestriction("is_deleted = false")
 public class Employee {
 
     @Id
@@ -26,8 +29,8 @@ public class Employee {
     private java.math.BigDecimal salary;
     private String department;
 
-    @Column(nullable = false)
-    private boolean isDeleted = false;
+    @Column(name = "is_deleted", nullable = false)
+    private boolean deleted = false;
 
     @org.springframework.data.annotation.CreatedBy
     @Column(updatable = false)
@@ -50,14 +53,14 @@ public class Employee {
 
     public Employee(java.util.UUID id, String name, String email, String position, java.math.BigDecimal salary,
             String department,
-            boolean isDeleted, String createdBy, String updatedBy, LocalDateTime createdAt, LocalDateTime updatedAt) {
+            boolean deleted, String createdBy, String updatedBy, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.position = position;
         this.salary = salary;
         this.department = department;
-        this.isDeleted = isDeleted;
+        this.deleted = deleted;
         this.createdBy = createdBy;
         this.updatedBy = updatedBy;
         this.createdAt = createdAt;
@@ -117,11 +120,11 @@ public class Employee {
     }
 
     public boolean isDeleted() {
-        return isDeleted;
+        return deleted;
     }
 
     public void setDeleted(boolean deleted) {
-        isDeleted = deleted;
+        this.deleted = deleted;
     }
 
     public String getCreatedBy() {
@@ -163,7 +166,7 @@ public class Employee {
         private String position;
         private java.math.BigDecimal salary;
         private String department;
-        private boolean isDeleted;
+        private boolean deleted;
         private String createdBy;
         private String updatedBy;
         private LocalDateTime createdAt;
@@ -202,8 +205,8 @@ public class Employee {
             return this;
         }
 
-        public EmployeeBuilder isDeleted(boolean isDeleted) {
-            this.isDeleted = isDeleted;
+        public EmployeeBuilder deleted(boolean deleted) {
+            this.deleted = deleted;
             return this;
         }
 
@@ -228,7 +231,7 @@ public class Employee {
         }
 
         public Employee build() {
-            return new Employee(id, name, email, position, salary, department, isDeleted, createdBy, updatedBy,
+            return new Employee(id, name, email, position, salary, department, deleted, createdBy, updatedBy,
                     createdAt, updatedAt);
         }
     }
