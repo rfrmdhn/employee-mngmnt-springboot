@@ -1,7 +1,7 @@
 package com.rfrmd.employeemanagement.config;
 
-import com.rfrmd.employeemanagement.model.User;
-import com.rfrmd.employeemanagement.repository.UserRepository;
+import com.rfrmd.employeemanagement.auth.entity.User;
+import com.rfrmd.employeemanagement.auth.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -56,7 +56,8 @@ class ApplicationConfigTest {
 
         UserDetailsService userDetailsService = applicationConfig.userDetailsService();
 
-        assertThrows(UsernameNotFoundException.class, () -> userDetailsService.loadUserByUsername("unknown@example.com"));
+        assertThrows(UsernameNotFoundException.class,
+                () -> userDetailsService.loadUserByUsername("unknown@example.com"));
     }
 
     @Test
@@ -68,9 +69,9 @@ class ApplicationConfigTest {
     @Test
     void authenticationManager_ShouldReturnManager() throws Exception {
         when(authConfig.getAuthenticationManager()).thenReturn(authManager);
-        
+
         AuthenticationManager manager = applicationConfig.authenticationManager(authConfig);
-        
+
         assertNotNull(manager);
         assertEquals(authManager, manager);
     }

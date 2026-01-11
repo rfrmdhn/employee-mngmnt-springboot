@@ -1,5 +1,6 @@
-package com.rfrmd.employeemanagement.security;
+package com.rfrmd.employeemanagement.auth.security;
 
+import com.rfrmd.employeemanagement.auth.security.JwtService;
 import io.jsonwebtoken.ExpiredJwtException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

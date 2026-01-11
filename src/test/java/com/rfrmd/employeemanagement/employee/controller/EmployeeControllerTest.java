@@ -1,7 +1,8 @@
-package com.rfrmd.employeemanagement.controller;
+package com.rfrmd.employeemanagement.employee.controller;
 
-import com.rfrmd.employeemanagement.dto.EmployeeDto;
-import com.rfrmd.employeemanagement.service.EmployeeService;
+import com.rfrmd.employeemanagement.employee.controller.EmployeeController;
+import com.rfrmd.employeemanagement.employee.dto.EmployeeDto;
+import com.rfrmd.employeemanagement.employee.service.EmployeeService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

@@ -1,10 +1,11 @@
-package com.rfrmd.employeemanagement.controller;
+package com.rfrmd.employeemanagement.auth.controller;
 
-import com.rfrmd.employeemanagement.dto.AuthenticationResponse;
-import com.rfrmd.employeemanagement.dto.LoginRequest;
-import com.rfrmd.employeemanagement.dto.RegisterRequest;
-import com.rfrmd.employeemanagement.model.Role;
-import com.rfrmd.employeemanagement.service.AuthService;
+import com.rfrmd.employeemanagement.auth.controller.AuthController;
+import com.rfrmd.employeemanagement.auth.dto.AuthenticationResponse;
+import com.rfrmd.employeemanagement.auth.dto.LoginRequest;
+import com.rfrmd.employeemanagement.auth.dto.RegisterRequest;
+import com.rfrmd.employeemanagement.auth.entity.Role;
+import com.rfrmd.employeemanagement.auth.service.AuthService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

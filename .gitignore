@@ -39,3 +39,5 @@ out/
 ### Misc ###
 *.log
 *.tmp
+
+*.txt
