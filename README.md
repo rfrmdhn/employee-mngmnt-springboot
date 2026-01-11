@@ -9,27 +9,27 @@
 ![Build Status](https://img.shields.io/badge/Build-Success-brightgreen)
 ![Test Coverage](https://img.shields.io/badge/Tests-100%25-brightgreen)
 
-## 📋 Table of Contents
+## Table of Contents
 
-- [Overview](#-overview)
-- [Key Features](#-key-features)
-- [Tech Stack](#-tech-stack)
-- [Architecture & Methodology](#-architecture--methodology)
-- [Getting Started](#-getting-started)
+- [Overview](#overview)
+- [Key Features](#key-features)
+- [Tech Stack](#tech-stack)
+- [Architecture & Methodology](#architecture--methodology)
+- [Getting Started](#getting-started)
   - [Prerequisites](#prerequisites)
   - [Installation](#installation)
   - [Configuration](#configuration)
   - [Running the Application](#running-the-application)
-- [API Documentation](#-api-documentation)
+- [API Documentation](#api-documentation)
   - [Authentication](#authentication)
   - [Employee Management](#employee-management)
-- [Testing](#-testing)
-- [Security](#-security)
-- [Future Improvements](#-future-improvements)
+- [Testing](#testing)
+- [Security](#security)
+- [Future Improvements](#future-improvements)
 
 ---
 
-## 📖 Overview
+## Overview
 
 The **Employee Management System** is a professional-grade backend REST API designed to demonstrate best practices in modern Java development. It provides a secure and efficient way to manage employee data, featuring strict authentication, role-based access control (RBAC), and comprehensive validation.
 
@@ -37,20 +37,20 @@ Unlike simple CRUD applications, this project emphasizes **production-readiness*
 
 ---
 
-## ✨ Key Features
+## Key Features
 
-- **🔐 Secure Authentication**: Stateless JWT (JSON Web Token) authentication with Refresh Token support.
-- **🛡️ Role-Based Access Control (RBAC)**: Fine-grained permissions for `ADMIN` vs `USER` roles.
-- **🚀 Rate Limiting**: Built-in protection against brute-force login attempts using **Bucket4j**.
-- **🔍 Advanced Search**: Generic JPA Specifications for dynamic filtering and pagination.
-- **♻️ Soft Deletes**: Automated handling of deleted records (data preservation) via Hibernate's `@SQLRestriction`.
-- **🛠️ Automated Mapping**: Fast and type-safe DTO-Entity conversion using **MapStruct**.
-- **📄 API Documentation**: Integrated Swagger UI / OpenAPI 3.0.
-- **🧪 Comprehensive Testing**: 100% pass rate for Unit and End-to-End (E2E) tests using **RestAssured** and **H2**.
+- **Secure Authentication**: Stateless JWT (JSON Web Token) authentication with Refresh Token support.
+- **Role-Based Access Control (RBAC)**: Fine-grained permissions for `ADMIN` vs `USER` roles.
+- **Rate Limiting**: Built-in protection against brute-force login attempts using **Bucket4j**.
+- **Advanced Search**: Generic JPA Specifications for dynamic filtering and pagination.
+- **Soft Deletes**: Automated handling of deleted records (data preservation) via Hibernate's `@SQLRestriction`.
+- **Automated Mapping**: Fast and type-safe DTO-Entity conversion using **MapStruct**.
+- **API Documentation**: Integrated Swagger UI / OpenAPI 3.0.
+- **Comprehensive Testing**: 100% pass rate for Unit and End-to-End (E2E) tests using **RestAssured** and **H2**.
 
 ---
 
-## 💻 Tech Stack
+## Tech Stack
 
 | Category | Technology | Purpose |
 | :--- | :--- | :--- |
@@ -67,7 +67,7 @@ Unlike simple CRUD applications, this project emphasizes **production-readiness*
 
 ---
 
-## 🏗️ Architecture & Methodology
+## Architecture & Methodology
 
 This project follows a **Modular Monolith** architecture with a clear separation of concerns, adhering to **SOLID Principles**.
 
@@ -84,7 +84,7 @@ This project follows a **Modular Monolith** architecture with a clear separation
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 -   **Java 17 Development Kit (JDK)**
@@ -130,7 +130,7 @@ The server will start on `http://localhost:8080`.
 
 ---
 
-## 📖 API Documentation
+## API Documentation
 
 Once the application is running, you can access the interactive Swagger UI documentation at:
 
@@ -141,8 +141,8 @@ Once the application is running, you can access the interactive Swagger UI docum
 #### Authentication
 | Method | Endpoint | Description | Public? |
 | :--- | :--- | :--- | :--- |
-| `POST` | `/api/auth/register` | Register a new user (`ADMIN` or `USER`) | ✅ |
-| `POST` | `/api/auth/login` | Login and receive Access Token | ✅ |
+| `POST` | `/api/auth/register` | Register a new user (`ADMIN` or `USER`) | Yes |
+| `POST` | `/api/auth/login` | Login and receive Access Token | Yes |
 
 #### Employee Management
 | Method | Endpoint | Description | Role Required |
@@ -155,7 +155,7 @@ Once the application is running, you can access the interactive Swagger UI docum
 
 ---
 
-## 🧪 Testing
+## Testing
 
 This project maintains a **10/10 Code Quality & Reliability** standard. It includes a complete suite of tests.
 
@@ -178,7 +178,7 @@ To run all unit and end-to-end tests:
 
 ---
 
-## 🔒 Security
+## Security
 
 Security is a primary focus of this application:
 -   **No Information Leakage**: Default Spring Boot error attributes (stack traces) are disabled. Custom global exception handling returns sanitized 4xx/5xx responses.
@@ -188,7 +188,7 @@ Security is a primary focus of this application:
 
 ---
 
-## 🔮 Future Improvements
+## Future Improvements
 
 -   [ ] **Docker Support**: Containerize the application and database with `docker-compose`.
 -   [ ] **CI/CD Pipeline**: Automate testing and deployment using GitHub Actions.
