@@ -188,12 +188,12 @@ Security is a primary focus of this application:
 
 ---
 
-## Future Improvements
+<!-- ## Future Improvements
 
 -   [ ] **Docker Support**: Containerize the application and database with `docker-compose`.
 -   [ ] **CI/CD Pipeline**: Automate testing and deployment using GitHub Actions.
 -   [ ] **Refresh Token Rotation**: Enhance security by rotating refresh tokens on use.
--   [ ] **Monitoring**: Add Spring Actuator and Prometheus/Grafana for real-time metrics.
+-   [ ] **Monitoring**: Add Spring Actuator and Prometheus/Grafana for real-time metrics. -->
 
 ---
 
