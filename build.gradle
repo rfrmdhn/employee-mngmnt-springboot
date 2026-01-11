@@ -1,7 +1,7 @@
 plugins {
 	id 'java'
-	id 'org.springframework.boot' version '3.3.0'
-	id 'io.spring.dependency-management' version '1.1.5'
+	id 'org.springframework.boot' version '3.4.1'
+	id 'io.spring.dependency-management' version '1.1.7'
 }
 
 group = 'com.rfrmd'
@@ -30,13 +30,25 @@ dependencies {
 
 	runtimeOnly 'com.mysql:mysql-connector-j'
 	runtimeOnly 'com.h2database:h2'
+	implementation 'io.github.cdimascio:dotenv-java:3.1.0'
+	
+	implementation 'org.mapstruct:mapstruct:1.5.5.Final'
+	annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
+	implementation 'com.bucket4j:bucket4j-core:8.1.0'
 	
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
+	testImplementation 'io.rest-assured:rest-assured'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
 tasks.named('test') {
 	useJUnitPlatform()
+	jvmArgs '-XX:+EnableDynamicAgentLoading'
+	jvmArgs '--add-opens', 'java.base/java.lang=ALL-UNNAMED'
+	jvmArgs '--add-opens', 'java.base/java.lang.reflect=ALL-UNNAMED'
+	systemProperty 'net.bytebuddy.experimental', 'true'
 }
+
+ext['mockito.version'] = '5.20.0'

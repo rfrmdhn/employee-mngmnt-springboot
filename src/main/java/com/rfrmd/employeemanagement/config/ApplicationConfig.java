@@ -1,6 +1,6 @@
 package com.rfrmd.employeemanagement.config;
 
-import com.rfrmd.employeemanagement.repository.UserRepository;
+import com.rfrmd.employeemanagement.auth.repository.UserRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
