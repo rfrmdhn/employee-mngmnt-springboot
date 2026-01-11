@@ -1,4 +1,4 @@
-# Employee Management System (SpringBoot Portfolio)
+# Employee Management System (SpringBoot)
 
 **Robust, Secure, and Scalable Backend API for Managing Employee Records.**
 
