@@ -23,9 +23,7 @@ public class Employee {
     private String email;
 
     private String position;
-
-    private Double salary;
-
+    private java.math.BigDecimal salary;
     private String department;
 
     @Column(nullable = false)
@@ -50,7 +48,8 @@ public class Employee {
     public Employee() {
     }
 
-    public Employee(java.util.UUID id, String name, String email, String position, Double salary, String department,
+    public Employee(java.util.UUID id, String name, String email, String position, java.math.BigDecimal salary,
+            String department,
             boolean isDeleted, String createdBy, String updatedBy, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.name = name;
@@ -101,11 +100,11 @@ public class Employee {
         this.position = position;
     }
 
-    public Double getSalary() {
+    public java.math.BigDecimal getSalary() {
         return salary;
     }
 
-    public void setSalary(Double salary) {
+    public void setSalary(java.math.BigDecimal salary) {
         this.salary = salary;
     }
 
@@ -162,7 +161,7 @@ public class Employee {
         private String name;
         private String email;
         private String position;
-        private Double salary;
+        private java.math.BigDecimal salary;
         private String department;
         private boolean isDeleted;
         private String createdBy;
@@ -193,7 +192,7 @@ public class Employee {
             return this;
         }
 
-        public EmployeeBuilder salary(Double salary) {
+        public EmployeeBuilder salary(java.math.BigDecimal salary) {
             this.salary = salary;
             return this;
         }

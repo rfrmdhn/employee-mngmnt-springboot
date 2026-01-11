@@ -4,6 +4,7 @@ import com.rfrmd.employeemanagement.auth.dto.AuthenticationResponse;
 import com.rfrmd.employeemanagement.auth.dto.LoginRequest;
 import com.rfrmd.employeemanagement.auth.dto.RegisterRequest;
 import com.rfrmd.employeemanagement.auth.service.AuthService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,14 +25,14 @@ public class AuthController {
     @io.swagger.v3.oas.annotations.Operation(summary = "Register a new user", description = "Creates a new user account with the specified role.")
     @PostMapping("/register")
     public ResponseEntity<AuthenticationResponse> register(
-            @RequestBody RegisterRequest request) {
+            @Valid @RequestBody RegisterRequest request) {
         return ResponseEntity.ok(service.register(request));
     }
 
     @io.swagger.v3.oas.annotations.Operation(summary = "Authenticate user", description = "Authenticates a user and returns a JWT token.")
     @PostMapping("/login")
     public ResponseEntity<AuthenticationResponse> authenticate(
-            @RequestBody LoginRequest request) {
+            @Valid @RequestBody LoginRequest request) {
         return ResponseEntity.ok(service.authenticate(request));
     }
 }

@@ -1,6 +1,5 @@
 package com.rfrmd.employeemanagement.employee.controller;
 
-import com.rfrmd.employeemanagement.employee.controller.EmployeeController;
 import com.rfrmd.employeemanagement.employee.dto.EmployeeDto;
 import com.rfrmd.employeemanagement.employee.service.EmployeeService;
 import org.junit.jupiter.api.BeforeEach;
@@ -44,7 +43,7 @@ class EmployeeControllerTest {
                 .name("John Doe")
                 .email("john@example.com")
                 .position("Developer")
-                .salary(50000.0)
+                .salary(java.math.BigDecimal.valueOf(50000.0))
                 .department("IT")
                 .build();
     }

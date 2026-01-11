@@ -3,6 +3,7 @@ package com.rfrmd.employeemanagement.employee.dto;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -15,7 +16,7 @@ public record EmployeeDto(
 
         @NotBlank(message = "Position is required") String position,
 
-        @Min(value = 0, message = "Salary must be positive") Double salary,
+        @Min(value = 0, message = "Salary must be positive") BigDecimal salary,
 
         String department,
 
@@ -30,7 +31,7 @@ public record EmployeeDto(
         private String name;
         private String email;
         private String position;
-        private Double salary;
+        private BigDecimal salary;
         private String department;
         private LocalDateTime createdAt;
         private LocalDateTime updatedAt;
@@ -55,7 +56,7 @@ public record EmployeeDto(
             return this;
         }
 
-        public Builder salary(Double salary) {
+        public Builder salary(BigDecimal salary) {
             this.salary = salary;
             return this;
         }

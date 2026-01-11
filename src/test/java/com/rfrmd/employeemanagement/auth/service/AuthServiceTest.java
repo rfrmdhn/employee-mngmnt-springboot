@@ -7,7 +7,6 @@ import com.rfrmd.employeemanagement.auth.entity.Role;
 import com.rfrmd.employeemanagement.auth.entity.User;
 import com.rfrmd.employeemanagement.auth.repository.UserRepository;
 import com.rfrmd.employeemanagement.auth.security.JwtService;
-import com.rfrmd.employeemanagement.auth.service.AuthService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,9 +15,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -77,7 +76,9 @@ class AuthServiceTest {
 
     @Test
     void authenticate_ShouldReturnAuthenticationResponse_WhenCredentialsAreValid() {
-        when(repository.findByEmail(loginRequest.email())).thenReturn(Optional.of(user));
+        Authentication authentication = mock(Authentication.class);
+        when(authenticationManager.authenticate(any())).thenReturn(authentication);
+        when(authentication.getPrincipal()).thenReturn(user);
         when(jwtService.generateToken(user)).thenReturn("jwt-token");
 
         AuthenticationResponse response = authService.authenticate(loginRequest);
@@ -86,19 +87,19 @@ class AuthServiceTest {
         assertEquals("jwt-token", response.accessToken());
 
         verify(authenticationManager).authenticate(any(UsernamePasswordAuthenticationToken.class));
-        verify(repository).findByEmail(loginRequest.email());
         verify(jwtService).generateToken(user);
     }
 
     @Test
-    void authenticate_ShouldThrowException_WhenUserNotFound() {
-        when(repository.findByEmail(loginRequest.email())).thenReturn(Optional.empty());
+    void authenticate_ShouldThrowException_WhenAuthenticationFails() {
+        when(authenticationManager.authenticate(any()))
+                .thenThrow(
+                        new org.springframework.security.authentication.BadCredentialsException("Invalid credentials"));
 
-        assertThrows(org.springframework.security.core.userdetails.UsernameNotFoundException.class,
+        assertThrows(org.springframework.security.authentication.BadCredentialsException.class,
                 () -> authService.authenticate(loginRequest));
 
         verify(authenticationManager).authenticate(any(UsernamePasswordAuthenticationToken.class));
-        verify(repository).findByEmail(loginRequest.email());
         verifyNoInteractions(jwtService);
     }
 }

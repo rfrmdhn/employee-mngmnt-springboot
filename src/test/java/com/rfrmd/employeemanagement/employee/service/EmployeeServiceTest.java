@@ -3,7 +3,6 @@ package com.rfrmd.employeemanagement.employee.service;
 import com.rfrmd.employeemanagement.employee.dto.EmployeeDto;
 import com.rfrmd.employeemanagement.employee.entity.Employee;
 import com.rfrmd.employeemanagement.employee.repository.EmployeeRepository;
-import com.rfrmd.employeemanagement.employee.service.EmployeeService;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -46,7 +45,7 @@ class EmployeeServiceTest {
                 .name("John Doe")
                 .email("john@example.com")
                 .position("Developer")
-                .salary(50000.0)
+                .salary(java.math.BigDecimal.valueOf(50000.0))
                 .department("IT")
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
@@ -58,7 +57,7 @@ class EmployeeServiceTest {
                 .name("John Doe")
                 .email("john@example.com")
                 .position("Developer")
-                .salary(50000.0)
+                .salary(java.math.BigDecimal.valueOf(50000.0))
                 .department("IT")
                 .build();
     }

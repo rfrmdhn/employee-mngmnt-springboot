@@ -9,6 +9,7 @@ import com.rfrmd.employeemanagement.auth.repository.UserRepository;
 import com.rfrmd.employeemanagement.auth.security.JwtService;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -41,13 +42,11 @@ public class AuthService {
         }
 
         public AuthenticationResponse authenticate(LoginRequest request) {
-                authenticationManager.authenticate(
+                Authentication authentication = authenticationManager.authenticate(
                                 new UsernamePasswordAuthenticationToken(
                                                 request.email(),
                                                 request.password()));
-                var user = repository.findByEmail(request.email())
-                                .orElseThrow(() -> new org.springframework.security.core.userdetails.UsernameNotFoundException(
-                                                "User not found"));
+                var user = (User) authentication.getPrincipal();
                 var jwtToken = jwtService.generateToken(user);
                 return new AuthenticationResponse(jwtToken);
         }
