@@ -7,10 +7,11 @@ public class SecurityConstants {
     public static final String SWAGGER_UI = "/swagger-ui/**";
     public static final String SWAGGER_UI_HTML = "/swagger-ui.html";
     public static final String EMPLOYEES_ENDPOINT = "/api/employees/**";
-    
+    public static final String BEARER_PREFIX = "Bearer ";
+
     // Roles
     // Role names are already handled by Role.name(), but we can add more if needed
-    
+
     private SecurityConstants() {
         // Private constructor to hide the implicit public one
     }

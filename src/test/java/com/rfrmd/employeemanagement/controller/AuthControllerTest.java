@@ -45,7 +45,7 @@ class AuthControllerTest {
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
-        assertEquals("jwt-token", response.getBody().getToken());
+        assertEquals("jwt-token", response.getBody().accessToken());
         verify(authService).register(registerRequest);
     }
 
@@ -57,7 +57,7 @@ class AuthControllerTest {
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
-        assertEquals("jwt-token", response.getBody().getToken());
+        assertEquals("jwt-token", response.getBody().accessToken());
         verify(authService).authenticate(loginRequest);
     }
 }

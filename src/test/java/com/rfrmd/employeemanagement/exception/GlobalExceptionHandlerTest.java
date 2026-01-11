@@ -31,8 +31,8 @@ class GlobalExceptionHandlerTest {
 
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
         assertNotNull(response.getBody());
-        assertEquals(404, response.getBody().getStatus());
-        assertEquals("Employee not found", response.getBody().getMessage());
+        assertEquals(404, response.getBody().status());
+        assertEquals("Employee not found", response.getBody().message());
     }
 
     @Test
@@ -43,8 +43,8 @@ class GlobalExceptionHandlerTest {
 
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
         assertNotNull(response.getBody());
-        assertEquals(400, response.getBody().getStatus());
-        assertEquals("Email already taken", response.getBody().getMessage());
+        assertEquals(400, response.getBody().status());
+        assertEquals("Email already taken", response.getBody().message());
     }
 
     @Test
@@ -60,10 +60,10 @@ class GlobalExceptionHandlerTest {
 
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
         assertNotNull(response.getBody());
-        assertEquals(400, response.getBody().getStatus());
-        assertEquals("Validation failed", response.getBody().getMessage());
-        assertNotNull(response.getBody().getErrors());
-        assertEquals("Email is required", response.getBody().getErrors().get("email"));
+        assertEquals(400, response.getBody().status());
+        assertEquals("Validation failed", response.getBody().message());
+        assertNotNull(response.getBody().errors());
+        assertEquals("Email is required", response.getBody().errors().get("email"));
     }
 
     @Test
@@ -74,7 +74,7 @@ class GlobalExceptionHandlerTest {
 
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
         assertNotNull(response.getBody());
-        assertEquals(500, response.getBody().getStatus());
-        assertEquals("Unexpected error", response.getBody().getMessage());
+        assertEquals(500, response.getBody().status());
+        assertEquals("Unexpected error", response.getBody().message());
     }
 }

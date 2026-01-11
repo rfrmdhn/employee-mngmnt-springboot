@@ -56,15 +56,15 @@ public class EmployeeService {
 
     @Transactional
     public EmployeeDto createEmployee(EmployeeDto dto) {
-        if (repository.existsByEmail(dto.getEmail())) {
+        if (repository.existsByEmail(dto.email())) {
             throw new IllegalArgumentException("Email already taken");
         }
         Employee employee = Employee.builder()
-                .name(dto.getName())
-                .email(dto.getEmail())
-                .position(dto.getPosition())
-                .salary(dto.getSalary())
-                .department(dto.getDepartment())
+                .name(dto.name())
+                .email(dto.email())
+                .position(dto.position())
+                .salary(dto.salary())
+                .department(dto.department())
                 .isDeleted(false)
                 .build();
         return mapToDto(repository.save(employee));
@@ -76,15 +76,15 @@ public class EmployeeService {
                 .filter(e -> !e.isDeleted())
                 .orElseThrow(() -> new EntityNotFoundException("Employee not found with id: " + id));
 
-        if (!employee.getEmail().equals(dto.getEmail()) && repository.existsByEmail(dto.getEmail())) {
+        if (!employee.getEmail().equals(dto.email()) && repository.existsByEmail(dto.email())) {
             throw new IllegalArgumentException("Email already taken");
         }
 
-        employee.setName(dto.getName());
-        employee.setEmail(dto.getEmail());
-        employee.setPosition(dto.getPosition());
-        employee.setSalary(dto.getSalary());
-        employee.setDepartment(dto.getDepartment());
+        employee.setName(dto.name());
+        employee.setEmail(dto.email());
+        employee.setPosition(dto.position());
+        employee.setSalary(dto.salary());
+        employee.setDepartment(dto.department());
 
         return mapToDto(repository.save(employee));
     }

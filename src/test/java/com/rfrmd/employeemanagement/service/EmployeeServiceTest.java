@@ -73,7 +73,18 @@ class EmployeeServiceTest {
 
         assertNotNull(result);
         assertEquals(1, result.getTotalElements());
-        assertEquals("John Doe", result.getContent().get(0).getName());
+        assertEquals("John Doe", result.getContent().get(0).name());
+        verify(repository).findAll(any(Specification.class), any(Pageable.class));
+    }
+
+    @Test
+    void getAllEmployees_WithKeyword_ShouldUseSpecification() {
+        Page<Employee> employeePage = new PageImpl<>(List.of(employee));
+        when(repository.findAll(any(Specification.class), any(Pageable.class))).thenReturn(employeePage);
+
+        Page<EmployeeDto> result = employeeService.getAllEmployees("developer", Pageable.unpaged());
+
+        assertNotNull(result);
         verify(repository).findAll(any(Specification.class), any(Pageable.class));
     }
 
@@ -85,8 +96,8 @@ class EmployeeServiceTest {
         EmployeeDto result = employeeService.getEmployeeById(employeeId);
 
         assertNotNull(result);
-        assertEquals("John Doe", result.getName());
-        assertEquals("john@example.com", result.getEmail());
+        assertEquals("John Doe", result.name());
+        assertEquals("john@example.com", result.email());
     }
 
     @Test
@@ -99,19 +110,19 @@ class EmployeeServiceTest {
     // --- createEmployee ---
     @Test
     void createEmployee_ShouldReturnEmployeeDto_WhenEmailIsUnique() {
-        when(repository.existsByEmail(employeeDto.getEmail())).thenReturn(false);
+        when(repository.existsByEmail(employeeDto.email())).thenReturn(false);
         when(repository.save(any(Employee.class))).thenReturn(employee);
 
         EmployeeDto result = employeeService.createEmployee(employeeDto);
 
         assertNotNull(result);
-        assertEquals("John Doe", result.getName());
+        assertEquals("John Doe", result.name());
         verify(repository).save(any(Employee.class));
     }
 
     @Test
     void createEmployee_ShouldThrowException_WhenEmailExists() {
-        when(repository.existsByEmail(employeeDto.getEmail())).thenReturn(true);
+        when(repository.existsByEmail(employeeDto.email())).thenReturn(true);
 
         assertThrows(IllegalArgumentException.class, () -> employeeService.createEmployee(employeeDto));
         verify(repository, never()).save(any(Employee.class));

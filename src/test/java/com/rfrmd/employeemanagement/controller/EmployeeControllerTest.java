@@ -71,7 +71,16 @@ class EmployeeControllerTest {
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
-        assertEquals("John Doe", response.getBody().getName());
+        assertEquals("John Doe", response.getBody().name());
+    }
+
+    @Test
+    void getEmployeeById_ShouldThrowException_WhenNotFound() {
+        when(employeeService.getEmployeeById(employeeId))
+                .thenThrow(new jakarta.persistence.EntityNotFoundException("Not found"));
+
+        assertThrows(jakarta.persistence.EntityNotFoundException.class,
+                () -> employeeController.getEmployeeById(employeeId));
     }
 
     @Test
@@ -82,7 +91,7 @@ class EmployeeControllerTest {
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
-        assertEquals("John Doe", response.getBody().getName());
+        assertEquals("John Doe", response.getBody().name());
         verify(employeeService).createEmployee(any(EmployeeDto.class));
     }
 

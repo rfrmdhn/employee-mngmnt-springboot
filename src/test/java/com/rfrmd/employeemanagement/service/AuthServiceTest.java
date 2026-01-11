@@ -67,37 +67,37 @@ class AuthServiceTest {
         AuthenticationResponse response = authService.register(registerRequest);
 
         assertNotNull(response);
-        assertEquals("jwt-token", response.getToken());
+        assertEquals("jwt-token", response.accessToken());
 
-        verify(passwordEncoder).encode(registerRequest.getPassword());
+        verify(passwordEncoder).encode(registerRequest.password());
         verify(repository).save(any(User.class));
         verify(jwtService).generateToken(any(User.class));
     }
 
     @Test
     void authenticate_ShouldReturnAuthenticationResponse_WhenCredentialsAreValid() {
-        when(repository.findByEmail(loginRequest.getEmail())).thenReturn(Optional.of(user));
+        when(repository.findByEmail(loginRequest.email())).thenReturn(Optional.of(user));
         when(jwtService.generateToken(user)).thenReturn("jwt-token");
 
         AuthenticationResponse response = authService.authenticate(loginRequest);
 
         assertNotNull(response);
-        assertEquals("jwt-token", response.getToken());
+        assertEquals("jwt-token", response.accessToken());
 
         verify(authenticationManager).authenticate(any(UsernamePasswordAuthenticationToken.class));
-        verify(repository).findByEmail(loginRequest.getEmail());
+        verify(repository).findByEmail(loginRequest.email());
         verify(jwtService).generateToken(user);
     }
 
     @Test
     void authenticate_ShouldThrowException_WhenUserNotFound() {
-        when(repository.findByEmail(loginRequest.getEmail())).thenReturn(Optional.empty());
+        when(repository.findByEmail(loginRequest.email())).thenReturn(Optional.empty());
 
-        assertThrows(RuntimeException.class, () -> authService.authenticate(loginRequest)); // Or specific exception if
-                                                                                            // configured
+        assertThrows(org.springframework.security.core.userdetails.UsernameNotFoundException.class,
+                () -> authService.authenticate(loginRequest));
 
         verify(authenticationManager).authenticate(any(UsernamePasswordAuthenticationToken.class));
-        verify(repository).findByEmail(loginRequest.getEmail());
+        verify(repository).findByEmail(loginRequest.email());
         verifyNoInteractions(jwtService);
     }
 }
