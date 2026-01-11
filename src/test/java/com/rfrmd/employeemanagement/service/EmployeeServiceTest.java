@@ -12,12 +12,13 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -34,11 +35,13 @@ class EmployeeServiceTest {
 
     private Employee employee;
     private EmployeeDto employeeDto;
+    private UUID employeeId;
 
     @BeforeEach
     void setUp() {
+        employeeId = UUID.randomUUID();
         employee = Employee.builder()
-                .id(1L)
+                .id(employeeId)
                 .name("John Doe")
                 .email("john@example.com")
                 .position("Developer")
@@ -46,9 +49,11 @@ class EmployeeServiceTest {
                 .department("IT")
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
+                .isDeleted(false)
                 .build();
 
         employeeDto = EmployeeDto.builder()
+                .id(employeeId)
                 .name("John Doe")
                 .email("john@example.com")
                 .position("Developer")
@@ -60,23 +65,24 @@ class EmployeeServiceTest {
     // --- getAllEmployees ---
     @Test
     void getAllEmployees_ShouldReturnPageOfEmployeeDtos() {
-        Pageable pageable = PageRequest.of(0, 10);
         Page<Employee> employeePage = new PageImpl<>(List.of(employee));
-        when(repository.findAll(pageable)).thenReturn(employeePage);
+        // Mock findAll(Specification, Pageable) instead of findAll(Pageable)
+        when(repository.findAll(any(Specification.class), any(Pageable.class))).thenReturn(employeePage);
 
-        Page<EmployeeDto> result = employeeService.getAllEmployees(pageable);
+        Page<EmployeeDto> result = employeeService.getAllEmployees(null, Pageable.unpaged());
 
         assertNotNull(result);
         assertEquals(1, result.getTotalElements());
         assertEquals("John Doe", result.getContent().get(0).getName());
+        verify(repository).findAll(any(Specification.class), any(Pageable.class));
     }
 
     // --- getEmployeeById ---
     @Test
     void getEmployeeById_ShouldReturnEmployeeDto_WhenFound() {
-        when(repository.findById(1L)).thenReturn(Optional.of(employee));
+        when(repository.findById(employeeId)).thenReturn(Optional.of(employee));
 
-        EmployeeDto result = employeeService.getEmployeeById(1L);
+        EmployeeDto result = employeeService.getEmployeeById(employeeId);
 
         assertNotNull(result);
         assertEquals("John Doe", result.getName());
@@ -85,9 +91,9 @@ class EmployeeServiceTest {
 
     @Test
     void getEmployeeById_ShouldThrowException_WhenNotFound() {
-        when(repository.findById(1L)).thenReturn(Optional.empty());
+        when(repository.findById(employeeId)).thenReturn(Optional.empty());
 
-        assertThrows(EntityNotFoundException.class, () -> employeeService.getEmployeeById(1L));
+        assertThrows(EntityNotFoundException.class, () -> employeeService.getEmployeeById(employeeId));
     }
 
     // --- createEmployee ---
@@ -114,11 +120,11 @@ class EmployeeServiceTest {
     // --- updateEmployee ---
     @Test
     void updateEmployee_ShouldReturnUpdatedDto_WhenFound() {
-        when(repository.findById(1L)).thenReturn(Optional.of(employee));
+        when(repository.findById(employeeId)).thenReturn(Optional.of(employee));
         // No need to mock existsByEmail since email hasn't changed
         when(repository.save(any(Employee.class))).thenReturn(employee);
 
-        EmployeeDto result = employeeService.updateEmployee(1L, employeeDto);
+        EmployeeDto result = employeeService.updateEmployee(employeeId, employeeDto);
 
         assertNotNull(result);
         verify(repository).save(any(Employee.class));
@@ -126,42 +132,46 @@ class EmployeeServiceTest {
 
     @Test
     void updateEmployee_ShouldThrowException_WhenNotFound() {
-        when(repository.findById(1L)).thenReturn(Optional.empty());
+        when(repository.findById(employeeId)).thenReturn(Optional.empty());
 
-        assertThrows(EntityNotFoundException.class, () -> employeeService.updateEmployee(1L, employeeDto));
+        assertThrows(EntityNotFoundException.class, () -> employeeService.updateEmployee(employeeId, employeeDto));
     }
 
     @Test
     void updateEmployee_ShouldThrowException_WhenEmailConflict() {
         Employee existingEmployee = Employee.builder()
-                .id(1L)
+                .id(employeeId)
                 .email("original@example.com")
+                .isDeleted(false)
                 .build();
         EmployeeDto newDto = EmployeeDto.builder()
                 .email("taken@example.com")
                 .build();
 
-        when(repository.findById(1L)).thenReturn(Optional.of(existingEmployee));
+        when(repository.findById(employeeId)).thenReturn(Optional.of(existingEmployee));
         when(repository.existsByEmail("taken@example.com")).thenReturn(true);
 
-        assertThrows(IllegalArgumentException.class, () -> employeeService.updateEmployee(1L, newDto));
+        assertThrows(IllegalArgumentException.class, () -> employeeService.updateEmployee(employeeId, newDto));
     }
 
     // --- deleteEmployee ---
     @Test
     void deleteEmployee_ShouldDelete_WhenFound() {
-        when(repository.existsById(1L)).thenReturn(true);
+        // Soft delete implementation: findById -> setDeleted(true) -> save
+        when(repository.findById(employeeId)).thenReturn(Optional.of(employee));
+        when(repository.save(any(Employee.class))).thenReturn(employee);
 
-        employeeService.deleteEmployee(1L);
+        employeeService.deleteEmployee(employeeId);
 
-        verify(repository).deleteById(1L);
+        assertTrue(employee.isDeleted());
+        verify(repository).save(employee);
     }
 
     @Test
     void deleteEmployee_ShouldThrowException_WhenNotFound() {
-        when(repository.existsById(1L)).thenReturn(false);
+        when(repository.findById(employeeId)).thenReturn(Optional.empty());
 
-        assertThrows(EntityNotFoundException.class, () -> employeeService.deleteEmployee(1L));
-        verify(repository, never()).deleteById(any());
+        assertThrows(EntityNotFoundException.class, () -> employeeService.deleteEmployee(employeeId));
+        verify(repository, never()).save(any());
     }
 }

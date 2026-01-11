@@ -18,6 +18,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -49,7 +50,7 @@ class AuthServiceTest {
         loginRequest = new LoginRequest("john@example.com", "password");
 
         user = User.builder()
-                .id(1L)
+                .id(UUID.randomUUID())
                 .name("John Doe")
                 .email("john@example.com")
                 .password("encodedPassword")
@@ -67,7 +68,7 @@ class AuthServiceTest {
 
         assertNotNull(response);
         assertEquals("jwt-token", response.getToken());
-        
+
         verify(passwordEncoder).encode(registerRequest.getPassword());
         verify(repository).save(any(User.class));
         verify(jwtService).generateToken(any(User.class));
@@ -87,13 +88,14 @@ class AuthServiceTest {
         verify(repository).findByEmail(loginRequest.getEmail());
         verify(jwtService).generateToken(user);
     }
-    
+
     @Test
     void authenticate_ShouldThrowException_WhenUserNotFound() {
         when(repository.findByEmail(loginRequest.getEmail())).thenReturn(Optional.empty());
 
-        assertThrows(RuntimeException.class, () -> authService.authenticate(loginRequest)); // Or specific exception if configured
-        
+        assertThrows(RuntimeException.class, () -> authService.authenticate(loginRequest)); // Or specific exception if
+                                                                                            // configured
+
         verify(authenticationManager).authenticate(any(UsernamePasswordAuthenticationToken.class));
         verify(repository).findByEmail(loginRequest.getEmail());
         verifyNoInteractions(jwtService);

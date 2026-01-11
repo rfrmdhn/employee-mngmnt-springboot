@@ -13,8 +13,8 @@ import java.time.LocalDateTime;
 public class Employee {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private java.util.UUID id;
 
     @Column(nullable = false)
     private String name;
@@ -28,6 +28,17 @@ public class Employee {
 
     private String department;
 
+    @Column(nullable = false)
+    private boolean isDeleted = false;
+
+    @org.springframework.data.annotation.CreatedBy
+    @Column(updatable = false)
+    private String createdBy;
+
+    @org.springframework.data.annotation.LastModifiedBy
+    @Column(insertable = false)
+    private String updatedBy;
+
     @CreatedDate
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
@@ -39,13 +50,17 @@ public class Employee {
     public Employee() {
     }
 
-    public Employee(Long id, String name, String email, String position, Double salary, String department, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public Employee(java.util.UUID id, String name, String email, String position, Double salary, String department,
+            boolean isDeleted, String createdBy, String updatedBy, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.position = position;
         this.salary = salary;
         this.department = department;
+        this.isDeleted = isDeleted;
+        this.createdBy = createdBy;
+        this.updatedBy = updatedBy;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
@@ -54,11 +69,11 @@ public class Employee {
         return new EmployeeBuilder();
     }
 
-    public Long getId() {
+    public java.util.UUID getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(java.util.UUID id) {
         this.id = id;
     }
 
@@ -102,6 +117,30 @@ public class Employee {
         this.department = department;
     }
 
+    public boolean isDeleted() {
+        return isDeleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        isDeleted = deleted;
+    }
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public String getUpdatedBy() {
+        return updatedBy;
+    }
+
+    public void setUpdatedBy(String updatedBy) {
+        this.updatedBy = updatedBy;
+    }
+
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
@@ -119,19 +158,22 @@ public class Employee {
     }
 
     public static class EmployeeBuilder {
-        private Long id;
+        private java.util.UUID id;
         private String name;
         private String email;
         private String position;
         private Double salary;
         private String department;
+        private boolean isDeleted;
+        private String createdBy;
+        private String updatedBy;
         private LocalDateTime createdAt;
         private LocalDateTime updatedAt;
 
         EmployeeBuilder() {
         }
 
-        public EmployeeBuilder id(Long id) {
+        public EmployeeBuilder id(java.util.UUID id) {
             this.id = id;
             return this;
         }
@@ -161,6 +203,21 @@ public class Employee {
             return this;
         }
 
+        public EmployeeBuilder isDeleted(boolean isDeleted) {
+            this.isDeleted = isDeleted;
+            return this;
+        }
+
+        public EmployeeBuilder createdBy(String createdBy) {
+            this.createdBy = createdBy;
+            return this;
+        }
+
+        public EmployeeBuilder updatedBy(String updatedBy) {
+            this.updatedBy = updatedBy;
+            return this;
+        }
+
         public EmployeeBuilder createdAt(LocalDateTime createdAt) {
             this.createdAt = createdAt;
             return this;
@@ -172,7 +229,8 @@ public class Employee {
         }
 
         public Employee build() {
-            return new Employee(id, name, email, position, salary, department, createdAt, updatedAt);
+            return new Employee(id, name, email, position, salary, department, isDeleted, createdBy, updatedBy,
+                    createdAt, updatedAt);
         }
     }
 }

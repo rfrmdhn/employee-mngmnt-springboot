@@ -4,10 +4,11 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 public class EmployeeDto {
-    
-    private Long id;
+
+    private UUID id;
 
     @NotBlank(message = "Name is required")
     private String name;
@@ -23,14 +24,15 @@ public class EmployeeDto {
     private Double salary;
 
     private String department;
-    
+
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
     public EmployeeDto() {
     }
 
-    public EmployeeDto(Long id, String name, String email, String position, Double salary, String department, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public EmployeeDto(UUID id, String name, String email, String position, Double salary, String department,
+            LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.name = name;
         this.email = email;
@@ -45,11 +47,11 @@ public class EmployeeDto {
         return new EmployeeDtoBuilder();
     }
 
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
@@ -110,7 +112,7 @@ public class EmployeeDto {
     }
 
     public static class EmployeeDtoBuilder {
-        private Long id;
+        private UUID id;
         private String name;
         private String email;
         private String position;
@@ -119,7 +121,7 @@ public class EmployeeDto {
         private LocalDateTime createdAt;
         private LocalDateTime updatedAt;
 
-        public EmployeeDtoBuilder id(Long id) {
+        public EmployeeDtoBuilder id(UUID id) {
             this.id = id;
             return this;
         }

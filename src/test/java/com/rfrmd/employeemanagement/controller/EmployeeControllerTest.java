@@ -16,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -32,11 +33,13 @@ class EmployeeControllerTest {
     private EmployeeController employeeController;
 
     private EmployeeDto employeeDto;
+    private UUID employeeId;
 
     @BeforeEach
     void setUp() {
+        employeeId = UUID.randomUUID();
         employeeDto = EmployeeDto.builder()
-                .id(1L)
+                .id(employeeId)
                 .name("John Doe")
                 .email("john@example.com")
                 .position("Developer")
@@ -49,9 +52,11 @@ class EmployeeControllerTest {
     void getAllEmployees_ShouldReturn200WithPage() {
         Pageable pageable = PageRequest.of(0, 10);
         Page<EmployeeDto> page = new PageImpl<>(List.of(employeeDto));
-        when(employeeService.getAllEmployees(any(Pageable.class))).thenReturn(page);
 
-        ResponseEntity<Page<EmployeeDto>> response = employeeController.getAllEmployees(pageable);
+        // Controller calls service with keyword=null
+        when(employeeService.getAllEmployees(eq(null), any(Pageable.class))).thenReturn(page);
+
+        ResponseEntity<Page<EmployeeDto>> response = employeeController.getAllEmployees(null, pageable);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
@@ -60,9 +65,9 @@ class EmployeeControllerTest {
 
     @Test
     void getEmployeeById_ShouldReturn200WithDto() {
-        when(employeeService.getEmployeeById(1L)).thenReturn(employeeDto);
+        when(employeeService.getEmployeeById(employeeId)).thenReturn(employeeDto);
 
-        ResponseEntity<EmployeeDto> response = employeeController.getEmployeeById(1L);
+        ResponseEntity<EmployeeDto> response = employeeController.getEmployeeById(employeeId);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
@@ -83,22 +88,22 @@ class EmployeeControllerTest {
 
     @Test
     void updateEmployee_ShouldReturn200WithUpdatedDto() {
-        when(employeeService.updateEmployee(eq(1L), any(EmployeeDto.class))).thenReturn(employeeDto);
+        when(employeeService.updateEmployee(eq(employeeId), any(EmployeeDto.class))).thenReturn(employeeDto);
 
-        ResponseEntity<EmployeeDto> response = employeeController.updateEmployee(1L, employeeDto);
+        ResponseEntity<EmployeeDto> response = employeeController.updateEmployee(employeeId, employeeDto);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
-        verify(employeeService).updateEmployee(eq(1L), any(EmployeeDto.class));
+        verify(employeeService).updateEmployee(eq(employeeId), any(EmployeeDto.class));
     }
 
     @Test
     void deleteEmployee_ShouldReturn204() {
-        doNothing().when(employeeService).deleteEmployee(1L);
+        doNothing().when(employeeService).deleteEmployee(employeeId);
 
-        ResponseEntity<Void> response = employeeController.deleteEmployee(1L);
+        ResponseEntity<Void> response = employeeController.deleteEmployee(employeeId);
 
         assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
-        verify(employeeService).deleteEmployee(1L);
+        verify(employeeService).deleteEmployee(employeeId);
     }
 }

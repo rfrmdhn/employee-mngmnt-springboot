@@ -1,6 +1,10 @@
 package com.rfrmd.employeemanagement.model;
 
+import com.rfrmd.employeemanagement.model.Role;
 import jakarta.persistence.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -11,11 +15,12 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "users")
+@EntityListeners(AuditingEntityListener.class)
 public class User implements UserDetails {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private java.util.UUID id;
 
     private String name;
 
@@ -28,26 +33,39 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    @CreatedDate
+    @Column(nullable = false, updatable = false)
+    private java.time.LocalDateTime createdAt;
+
+    @LastModifiedDate
+    @Column(insertable = false)
+    private java.time.LocalDateTime updatedAt;
+
     public User() {
     }
 
-    public User(Long id, String name, String email, String password, Role role) {
+    public User(java.util.UUID id, String name, String email, String password, Role role,
+            java.time.LocalDateTime createdAt, java.time.LocalDateTime updatedAt) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.password = password;
         this.role = role;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
     }
 
     public static UserBuilder builder() {
         return new UserBuilder();
     }
 
-    public Long getId() {
+    // Getters and Setters
+
+    public java.util.UUID getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(java.util.UUID id) {
         this.id = id;
     }
 
@@ -83,6 +101,22 @@ public class User implements UserDetails {
         this.role = role;
     }
 
+    public java.time.LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(java.time.LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public java.time.LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(java.time.LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role.name()));
@@ -114,16 +148,18 @@ public class User implements UserDetails {
     }
 
     public static class UserBuilder {
-        private Long id;
+        private java.util.UUID id;
         private String name;
         private String email;
         private String password;
         private Role role;
+        private java.time.LocalDateTime createdAt;
+        private java.time.LocalDateTime updatedAt;
 
         UserBuilder() {
         }
 
-        public UserBuilder id(Long id) {
+        public UserBuilder id(java.util.UUID id) {
             this.id = id;
             return this;
         }
@@ -148,8 +184,18 @@ public class User implements UserDetails {
             return this;
         }
 
+        public UserBuilder createdAt(java.time.LocalDateTime createdAt) {
+            this.createdAt = createdAt;
+            return this;
+        }
+
+        public UserBuilder updatedAt(java.time.LocalDateTime updatedAt) {
+            this.updatedAt = updatedAt;
+            return this;
+        }
+
         public User build() {
-            return new User(id, name, email, password, role);
+            return new User(id, name, email, password, role, createdAt, updatedAt);
         }
     }
 }
